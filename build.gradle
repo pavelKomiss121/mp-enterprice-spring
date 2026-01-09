@@ -118,8 +118,17 @@ spotless {
 		endWithNewline()
 	}
 	java {
+		// IMPORTANT:
+		// - `openApiGenerate` writes sources into `build/generated/...`
+		// - Spotless must NOT format those generated sources, otherwise Gradle task validation
+		//   can fail in CI with "implicit dependency" errors.
+		target 'src/**/*.java'
+		targetExclude "${buildDir}/generated/**"
 		googleJavaFormat("${versions.googleJavaFormat}").aosp().reflowLongStrings().skipJavadocFormatting()
 		formatAnnotations()
 		licenseHeader '/* @MENTEE_POWER (C)$YEAR */'
 	}
 }
+
+// Ensure generation happens before compilation (already set above) and keep Spotless independent
+// from generated sources by excluding build/generated/** in the Spotless config.
