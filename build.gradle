@@ -75,6 +75,15 @@ openApiGenerate {
 	]
 }
 
+// Генерация для Order Management API
+// Плагин поддерживает только один блок openApiGenerate
+// Для генерации Order API временно измените в блоке выше (строки 63-66):
+//   inputSpec = "$rootDir/src/main/resources/api/order-management-api.yaml"
+//   apiPackage = "ru.mentee.ordermanager.api.generated.controller"
+//   modelPackage = "ru.mentee.ordermanager.api.generated.dto"
+// Затем запустите: ./gradlew openApiGenerate
+// После генерации верните все значения обратно для Task Management API
+
 // Подключение сгенерированного кода к проекту
 sourceSets {
 	main {
