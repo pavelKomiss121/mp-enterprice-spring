@@ -3,6 +3,7 @@ plugins {
 	id 'org.springframework.boot' version '3.2.5'
 	id 'io.spring.dependency-management' version '1.1.4'
 	id "com.diffplug.spotless" version "6.23.3"
+	id 'org.openapi.generator' version '7.2.0'
 }
 
 group = 'ru.mentee.library'
@@ -32,13 +33,19 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-aop'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
+	implementation 'org.springframework.boot:spring-boot-starter-hateoas'
 	implementation 'org.liquibase:liquibase-core'
+	implementation 'io.swagger.core.v3:swagger-annotations:2.2.22'
+	implementation 'com.fasterxml.jackson.core:jackson-databind'
+	implementation 'com.fasterxml.jackson.core:jackson-annotations'
+	implementation 'org.openapitools:jackson-databind-nullable:0.2.6'
 
 	runtimeOnly 'org.postgresql:postgresql'
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'com.h2database:h2'
 	testImplementation platform("org.testcontainers:testcontainers-bom:${testcontainersVersion}")
 	testImplementation 'org.testcontainers:postgresql'
 	testImplementation 'org.testcontainers:junit-jupiter'
@@ -49,6 +56,36 @@ dependencies {
 tasks.named('test') {
 	useJUnitPlatform()
 }
+
+// OpenAPI Generator configuration
+openApiGenerate {
+	generatorName = "spring"
+	inputSpec = "$rootDir/src/main/resources/api/task-management-api.yaml"
+	outputDir = "$buildDir/generated"
+	apiPackage = "ru.mentee.taskmanager.api.generated.controller"
+	modelPackage = "ru.mentee.taskmanager.api.generated.dto"
+	configOptions = [
+		dateLibrary: "java8",
+		interfaceOnly: "true",
+		useTags: "true",
+		performBeanValidation: "true",
+		useBeanValidation: "true",
+		useSpringBoot3: "true",
+		delegatePattern: "true"
+	]
+}
+
+// Подключение сгенерированного кода к проекту
+sourceSets {
+	main {
+		java {
+			srcDirs += "$buildDir/generated/src/main/java"
+		}
+	}
+}
+
+// Зависимость от генерации перед компиляцией
+compileJava.dependsOn tasks.openApiGenerate
 
 // Указываем главный класс для Spring Boot (чтобы избежать конфликта с TodoApplication)
 tasks.named('bootJar') {
