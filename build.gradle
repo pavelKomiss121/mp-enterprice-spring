@@ -38,6 +38,7 @@ dependencies {
 	implementation 'io.swagger.core.v3:swagger-annotations:2.2.22'
 	implementation 'com.fasterxml.jackson.core:jackson-databind'
 	implementation 'com.fasterxml.jackson.core:jackson-annotations'
+	implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml'
 	implementation 'org.openapitools:jackson-databind-nullable:0.2.6'
 
 	runtimeOnly 'org.postgresql:postgresql'
