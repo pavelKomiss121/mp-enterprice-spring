@@ -10,10 +10,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.mentee.todo.domain.model.Task;
-import ru.mentee.todo.domain.repository.TaskRepository;
 import ru.mentee.todo.api.dto.CreateTaskRequest;
 import ru.mentee.todo.api.dto.TaskDto;
+import ru.mentee.todo.domain.model.Task;
+import ru.mentee.todo.domain.repository.TaskRepository;
 import ru.mentee.todo.service.TaskService;
 
 @Slf4j
