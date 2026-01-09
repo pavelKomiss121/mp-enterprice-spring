@@ -1,3 +1,4 @@
+/* @MENTEE_POWER (C)2026 */
 package ru.mentee.calculator.annotation;
 
 import java.lang.annotation.ElementType;
@@ -7,5 +8,4 @@ import java.lang.annotation.Target;
 
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Loggable {
-}
+public @interface Loggable {}
