@@ -1,0 +1,478 @@
+openapi: 3.0.3
+info:
+  title: Order Management API
+  version: 1.0.0
+  description: RESTful API для управления заказами
+
+servers:
+  - url: http://localhost:8080/api/v1
+    description: Local development server
+
+paths:
+  /orders:
+    get:
+      summary: Получить список заказов
+      operationId: getOrders
+      tags:
+        - Orders
+      parameters:
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [PENDING, CONFIRMED, SHIPPED, DELIVERED, CANCELLED]
+        - name: priority
+          in: query
+          schema:
+            type: string
+            enum: [LOW, NORMAL, HIGH, URGENT]
+        - name: customerId
+          in: query
+          schema:
+            type: string
+            format: uuid
+        - name: sort
+          in: query
+          schema:
+            type: string
+            example: "createdAt:desc"
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 0
+        - name: size
+          in: query
+          schema:
+            type: integer
+            default: 20
+      responses:
+        '200':
+          description: Список заказов
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderListResponse'
+
+    post:
+      summary: Создать новый заказ
+      operationId: createOrder
+      tags:
+        - Orders
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateOrderRequest'
+      responses:
+        '201':
+          description: Заказ создан
+          headers:
+            Location:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+
+  /orders/{orderId}:
+    get:
+      summary: Получить заказ по ID
+      operationId: getOrderById
+      tags:
+        - Orders
+      parameters:
+        - name: orderId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Информация о заказе
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    put:
+      summary: Обновить заказ
+      operationId: updateOrder
+      tags:
+        - Orders
+      parameters:
+        - name: orderId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateOrderRequest'
+      responses:
+        '200':
+          description: Заказ обновлен
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+
+    patch:
+      summary: Частично обновить заказ
+      operationId: patchOrder
+      tags:
+        - Orders
+      parameters:
+        - name: orderId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchOrderRequest'
+      responses:
+        '200':
+          description: Заказ обновлен
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+
+    delete:
+      summary: Удалить заказ
+      operationId: deleteOrder
+      tags:
+        - Orders
+      parameters:
+        - name: orderId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: Заказ удален
+
+  /orders/{orderId}/items:
+    get:
+      summary: Получить позиции заказа
+      operationId: getOrderItems
+      tags:
+        - Orders
+      parameters:
+        - name: orderId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Список позиций заказа
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/OrderItem'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    post:
+      summary: Добавить позицию к заказу
+      operationId: addOrderItem
+      tags:
+        - Orders
+      parameters:
+        - name: orderId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateOrderItemRequest'
+      responses:
+        '201':
+          description: Позиция добавлена
+          headers:
+            Location:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderItem'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+components:
+  schemas:
+    Order:
+      type: object
+      required:
+        - id
+        - customerId
+        - status
+        - priority
+        - totalAmount
+        - createdAt
+      properties:
+        id:
+          type: string
+          format: uuid
+        customerId:
+          type: string
+          format: uuid
+        customerName:
+          type: string
+          minLength: 2
+          maxLength: 100
+        status:
+          type: string
+          enum: [PENDING, CONFIRMED, SHIPPED, DELIVERED, CANCELLED]
+        priority:
+          type: string
+          enum: [LOW, NORMAL, HIGH, URGENT]
+        totalAmount:
+          type: number
+          format: decimal
+          minimum: 0
+        shippingAddress:
+          type: string
+          maxLength: 500
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrderItem'
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        _links:
+          type: object
+          properties:
+            self:
+              $ref: '#/components/schemas/Link'
+            items:
+              $ref: '#/components/schemas/Link'
+            customer:
+              $ref: '#/components/schemas/Link'
+            update:
+              $ref: '#/components/schemas/Link'
+            cancel:
+              $ref: '#/components/schemas/Link'
+
+    CreateOrderRequest:
+      type: object
+      required:
+        - customerId
+        - priority
+        - items
+      properties:
+        customerId:
+          type: string
+          format: uuid
+        customerName:
+          type: string
+          minLength: 2
+          maxLength: 100
+        priority:
+          type: string
+          enum: [LOW, NORMAL, HIGH, URGENT]
+        shippingAddress:
+          type: string
+          maxLength: 500
+        items:
+          type: array
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/CreateOrderItemRequest'
+
+    UpdateOrderRequest:
+      type: object
+      properties:
+        customerId:
+          type: string
+          format: uuid
+        customerName:
+          type: string
+          minLength: 2
+          maxLength: 100
+        status:
+          type: string
+          enum: [PENDING, CONFIRMED, SHIPPED, DELIVERED, CANCELLED]
+        priority:
+          type: string
+          enum: [LOW, NORMAL, HIGH, URGENT]
+        shippingAddress:
+          type: string
+          maxLength: 500
+
+    PatchOrderRequest:
+      type: object
+      properties:
+        customerId:
+          type: string
+          format: uuid
+        customerName:
+          type: string
+          minLength: 2
+          maxLength: 100
+        status:
+          type: string
+          enum: [PENDING, CONFIRMED, SHIPPED, DELIVERED, CANCELLED]
+        priority:
+          type: string
+          enum: [LOW, NORMAL, HIGH, URGENT]
+        shippingAddress:
+          type: string
+          maxLength: 500
+
+    OrderItem:
+      type: object
+      required:
+        - id
+        - orderId
+        - productName
+        - quantity
+        - unitPrice
+        - totalPrice
+      properties:
+        id:
+          type: string
+          format: uuid
+        orderId:
+          type: string
+          format: uuid
+        productName:
+          type: string
+          minLength: 1
+          maxLength: 200
+        quantity:
+          type: integer
+          minimum: 1
+          maximum: 1000
+        unitPrice:
+          type: number
+          format: decimal
+          minimum: 0
+        totalPrice:
+          type: number
+          format: decimal
+          minimum: 0
+
+    CreateOrderItemRequest:
+      type: object
+      required:
+        - productName
+        - quantity
+        - unitPrice
+      properties:
+        productName:
+          type: string
+          minLength: 1
+          maxLength: 200
+        quantity:
+          type: integer
+          minimum: 1
+          maximum: 1000
+        unitPrice:
+          type: number
+          format: decimal
+          minimum: 0
+
+    OrderListResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Order'
+        page:
+          type: integer
+        size:
+          type: integer
+        totalElements:
+          type: integer
+        totalPages:
+          type: integer
+
+    Link:
+      type: object
+      properties:
+        href:
+          type: string
+        method:
+          type: string
+          enum: [GET, POST, PUT, PATCH, DELETE]
+
+    ErrorResponse:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+        path:
+          type: string
+
+    ValidationErrorResponse:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+        path:
+          type: string
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/FieldError'
+
+    FieldError:
+      type: object
+      properties:
+        field:
+          type: string
+        message:
+          type: string
+        rejectedValue:
+          type: string
+
+  responses:
+    NotFound:
+      description: Ресурс не найден
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+
