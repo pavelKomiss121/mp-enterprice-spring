@@ -49,6 +49,20 @@ tasks.named('test') {
 	useJUnitPlatform()
 }
 
+// Указываем главный класс для Spring Boot (чтобы избежать конфликта с TodoApplication)
+tasks.named('bootJar') {
+	mainClass = 'ru.mentee.library.LibraryApplication'
+}
+
+tasks.named('bootRun') {
+	mainClass = 'ru.mentee.library.LibraryApplication'
+}
+
+// Для resolveMainClassName
+tasks.named('resolveMainClassName') {
+	mainClassName = 'ru.mentee.library.LibraryApplication'
+}
+
 spotless {
 	format 'misc', {
 		target '*.gradle', '.gitattributes', '.gitignore'
