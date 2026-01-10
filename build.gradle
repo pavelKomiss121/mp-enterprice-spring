@@ -10,7 +10,9 @@ group = 'ru.mentee.library'
 version = '0.0.1-SNAPSHOT'
 
 java {
-	sourceCompatibility = '21'
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(21)
+	}
 }
 
 repositories {
@@ -45,6 +47,9 @@ dependencies {
 	runtimeOnly 'com.h2database:h2'  // Для блога (in-memory БД)
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
+
+	// JPA Metamodel Generator для типобезопасных Specifications
+	annotationProcessor 'org.hibernate.orm:hibernate-jpamodelgen:6.4.4.Final'
 
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'com.h2database:h2'
