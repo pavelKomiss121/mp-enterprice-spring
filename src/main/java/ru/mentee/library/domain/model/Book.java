@@ -1,37 +1,66 @@
-/* @MENTEE_POWER (C)2025 */
+/* @MENTEE_POWER (C)2026 */
 package ru.mentee.library.domain.model;
 
 import jakarta.persistence.*;
-import java.time.LocalDate;
+import java.time.Instant;
+import java.util.HashSet;
+import java.util.Set;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Builder;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
 @Table(name = "books")
-@Getter
-@Setter
+@EntityListeners(AuditingEntityListener.class)
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Book {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false, unique = true, length = 20)
+    private String isbn;
+
     @Column(nullable = false, length = 200)
     private String title;
 
-    @Column(nullable = false, length = 100)
-    private String author;
+    @Column(columnDefinition = "TEXT")
+    private String description;
 
-    @Column(unique = true, nullable = false, length = 20)
-    private String isbn;
+    @Column(name = "publication_year")
+    private Integer publicationYear;
 
-    @Column(name = "published_date")
-    private LocalDate publishedDate;
+    private Integer pages;
 
-    @Column(nullable = false)
-    private Boolean available = true;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id")
+    private Category category;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 20)
+    private BookStatus status;
+
+    @ManyToMany
+    @JoinTable(
+            name = "book_authors",
+            joinColumns = @JoinColumn(name = "book_id"),
+            inverseJoinColumns = @JoinColumn(name = "author_id"))
+    @Builder.Default
+    private Set<Author> authors = new HashSet<>();
+
+    @CreatedDate
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private Instant createdAt;
+
+    @LastModifiedDate
+    @Column(name = "updated_at")
+    private Instant updatedAt;
 }
