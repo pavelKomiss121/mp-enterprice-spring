@@ -117,11 +117,15 @@ class LoanRepositoryTest {
     @DisplayName("Should посчитать выдачи за период")
     void shouldCountLoansByPeriod() {
         // Given
+        Instant now = Instant.now();
+        Instant startDate = now.minus(30, ChronoUnit.DAYS);
+        Instant endDate = now.plus(1, ChronoUnit.DAYS); // Add buffer to ensure all loans are included
+        
         User user = new User();
         user.setEmail("stat@example.com");
         user.setFirstName("Stat");
         user.setLastName("User");
-        user.setRegisteredAt(Instant.now());
+        user.setRegisteredAt(now);
         entityManager.persist(user);
 
         Book book = new Book();
@@ -130,18 +134,15 @@ class LoanRepositoryTest {
         book.setStatus(BookStatus.AVAILABLE);
         entityManager.persist(book);
 
-        Instant startDate = Instant.now().minus(30, ChronoUnit.DAYS);
-        Instant endDate = Instant.now();
-
         // Create loans within period
         for (int i = 0; i < 5; i++) {
             Loan loan = new Loan();
             loan.setBook(book);
             loan.setUser(user);
-            loan.setLoanDate(Instant.now().minus(i * 5, ChronoUnit.DAYS));
-            loan.setDueDate(Instant.now().plus(14, ChronoUnit.DAYS));
+            loan.setLoanDate(now.minus(i * 5, ChronoUnit.DAYS));
+            loan.setDueDate(now.plus(14, ChronoUnit.DAYS));
             loan.setStatus(LoanStatus.RETURNED);
-            loan.setReturnDate(Instant.now());
+            loan.setReturnDate(now);
             entityManager.persist(loan);
         }
 
