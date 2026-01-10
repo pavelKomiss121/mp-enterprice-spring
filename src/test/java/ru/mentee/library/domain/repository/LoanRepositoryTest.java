@@ -119,8 +119,9 @@ class LoanRepositoryTest {
         // Given
         Instant now = Instant.now();
         Instant startDate = now.minus(30, ChronoUnit.DAYS);
-        Instant endDate = now.plus(1, ChronoUnit.DAYS); // Add buffer to ensure all loans are included
-        
+        Instant endDate =
+                now.plus(1, ChronoUnit.DAYS); // Add buffer to ensure all loans are included
+
         User user = new User();
         user.setEmail("stat@example.com");
         user.setFirstName("Stat");
