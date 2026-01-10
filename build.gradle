@@ -42,6 +42,7 @@ dependencies {
 	implementation 'org.openapitools:jackson-databind-nullable:0.2.6'
 
 	runtimeOnly 'org.postgresql:postgresql'
+	runtimeOnly 'com.h2database:h2'  // Для блога (in-memory БД)
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 
