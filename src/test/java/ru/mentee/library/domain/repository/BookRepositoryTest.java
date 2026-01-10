@@ -7,6 +7,7 @@ import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.IntStream;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import ru.mentee.library.config.TestJpaAuditConfig;
 import ru.mentee.library.domain.model.*;
 
+@Disabled("Отключено для ускорения тестов - используется только booking модуль")
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Testcontainers

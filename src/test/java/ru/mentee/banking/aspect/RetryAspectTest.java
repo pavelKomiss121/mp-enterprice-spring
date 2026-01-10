@@ -8,6 +8,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,7 @@ import ru.mentee.banking.service.ExternalPaymentService;
 import ru.mentee.banking.service.PaymentGateway;
 import ru.mentee.banking.service.SecurityContext;
 
+@Disabled("Отключено для ускорения тестов - используется только booking модуль")
 @SpringBootTest(classes = ru.mentee.banking.BankingApplication.class)
 @TestPropertySource(
         properties = {

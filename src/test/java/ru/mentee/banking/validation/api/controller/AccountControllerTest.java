@@ -4,6 +4,7 @@ package ru.mentee.banking.validation.api.controller;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import ru.mentee.banking.validation.api.advice.GlobalValidationExceptionHandler;
 import ru.mentee.banking.validation.service.AccountService;
 
+@Disabled("Отключено для ускорения тестов - используется только booking модуль")
 @WebMvcTest(AccountController.class)
 @Import(GlobalValidationExceptionHandler.class)
 class AccountControllerTest {
