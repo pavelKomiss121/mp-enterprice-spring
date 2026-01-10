@@ -1,3 +1,4 @@
+/* @MENTEE_POWER (C)2026 */
 package ru.mentee.blog.api.annotation;
 
 import java.lang.annotation.ElementType;
@@ -7,5 +8,4 @@ import java.lang.annotation.Target;
 
 @Target(ElementType.PARAMETER)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface CurrentUser {
-}
+public @interface CurrentUser {}

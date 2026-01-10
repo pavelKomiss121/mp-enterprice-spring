@@ -1,3 +1,4 @@
+/* @MENTEE_POWER (C)2026 */
 package ru.mentee.blog.domain.model;
 
 import lombok.*;
@@ -7,6 +8,6 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class User {
-  private String username;
-  private String email;
+    private String username;
+    private String email;
 }

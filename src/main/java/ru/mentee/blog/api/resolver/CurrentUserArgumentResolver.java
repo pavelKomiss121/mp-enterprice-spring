@@ -1,3 +1,4 @@
+/* @MENTEE_POWER (C)2026 */
 package ru.mentee.blog.api.resolver;
 
 import lombok.extern.slf4j.Slf4j;
@@ -14,24 +15,20 @@ import ru.mentee.blog.domain.model.User;
 @Slf4j
 public class CurrentUserArgumentResolver implements HandlerMethodArgumentResolver {
 
+    @Override
+    public boolean supportsParameter(MethodParameter parameter) {
+        return parameter.hasParameterAnnotation(CurrentUser.class);
+    }
 
-  @Override
-  public boolean supportsParameter(MethodParameter parameter) {
-    return parameter.hasParameterAnnotation(CurrentUser.class);
-  }
+    @Override
+    public Object resolveArgument(
+            MethodParameter parameter,
+            ModelAndViewContainer mavContainer,
+            NativeWebRequest webRequest,
+            WebDataBinderFactory binderFactory) {
 
-  @Override
-  public Object resolveArgument(
-      MethodParameter parameter,
-      ModelAndViewContainer mavContainer,
-      NativeWebRequest webRequest,
-      WebDataBinderFactory binderFactory) {
+        log.debug("Resolving @CurrentUser argument");
 
-    log.debug("Resolving @CurrentUser argument");
-
-    return User.builder()
-        .username("demo")
-        .email("demo@example.com")
-        .build();
-  }
+        return User.builder().username("demo").email("demo@example.com").build();
+    }
 }
