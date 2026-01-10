@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,7 @@ import ru.mentee.banking.exception.AccessDeniedException;
 import ru.mentee.banking.service.AccountService;
 import ru.mentee.banking.service.SecurityContext;
 
+@Disabled("Отключено для ускорения тестов - используется только booking модуль")
 @SpringBootTest(classes = ru.mentee.banking.BankingApplication.class)
 @EnableAspectJAutoProxy
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)

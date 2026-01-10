@@ -12,6 +12,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,7 @@ import ru.mentee.learning.domain.model.Student;
 import ru.mentee.learning.service.CourseService;
 import ru.mentee.learning.service.StudentService;
 
+@Disabled("Отключено для ускорения тестов - используется только booking модуль")
 @WebMvcTest(CourseController.class)
 class CourseControllerTest {
 

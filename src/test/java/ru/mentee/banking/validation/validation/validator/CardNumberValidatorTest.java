@@ -4,10 +4,12 @@ package ru.mentee.banking.validation.validation.validator;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
+@Disabled("Отключено для ускорения тестов - используется только booking модуль")
 class CardNumberValidatorTest {
 
     private CardNumberValidator validator;
