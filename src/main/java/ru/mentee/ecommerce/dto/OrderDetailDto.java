@@ -1,0 +1,20 @@
+/* @MENTEE_POWER (C)2024 */
+package ru.mentee.ecommerce.dto;
+
+import java.time.LocalDate;
+import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+public class OrderDetailDto {
+    private Long id;
+    private String customerName;
+    private LocalDate orderDate;
+    private List<OrderItemDto> items;
+}
