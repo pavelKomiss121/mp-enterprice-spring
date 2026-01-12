@@ -36,6 +36,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-hateoas'
+	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.liquibase:liquibase-core'
 	implementation 'io.swagger.core.v3:swagger-annotations:2.2.22'
 	implementation 'com.fasterxml.jackson.core:jackson-databind'
@@ -52,6 +53,7 @@ dependencies {
 	annotationProcessor 'org.hibernate.orm:hibernate-jpamodelgen:6.4.4.Final'
 
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'org.springframework.security:spring-security-test'
 	testImplementation 'com.h2database:h2'
 	testImplementation platform("org.testcontainers:testcontainers-bom:${testcontainersVersion}")
 	testImplementation 'org.testcontainers:postgresql'
