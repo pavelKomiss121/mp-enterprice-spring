@@ -34,4 +34,10 @@ public class User {
 
     @Column(name = "registered_at", nullable = false)
     private Instant registeredAt;
+
+    @Column(nullable = false, length = 255)
+    private String password;
+
+    @Column(nullable = false, length = 20)
+    private String role;
 }
