@@ -66,6 +66,9 @@ dependencies {
 
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
+	testImplementation 'io.rest-assured:rest-assured'
+	testImplementation 'io.rest-assured:json-path'
+	testImplementation 'io.rest-assured:xml-path'
 	testImplementation 'com.h2database:h2'
 	testImplementation platform("org.testcontainers:testcontainers-bom:${testcontainersVersion}")
 	testImplementation 'org.testcontainers:postgresql'
