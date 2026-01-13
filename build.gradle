@@ -57,6 +57,10 @@ dependencies {
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 
+	// MapStruct для маппинга Entity <-> DTO
+	implementation 'org.mapstruct:mapstruct:1.5.5.Final'
+	annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.5.Final'
+
 	// JPA Metamodel Generator для типобезопасных Specifications
 	annotationProcessor 'org.hibernate.orm:hibernate-jpamodelgen:6.4.4.Final'
 

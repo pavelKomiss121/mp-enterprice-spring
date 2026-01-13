@@ -1,79 +1,49 @@
 /* @MENTEE_POWER (C)2026 */
 package ru.mentee.library.service;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.security.Keys;
-import java.nio.charset.StandardCharsets;
-import java.time.Instant;
-import java.util.Date;
-import java.util.List;
-import javax.crypto.SecretKey;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Service;
 
-@Service
-public class TokenService {
+/**
+ * Интерфейс сервиса для работы с JWT токенами.
+ */
+public interface TokenService {
 
-    @Value("${jwt.secret:mySecretKeyForJWTTokenGenerationThatShouldBeAtLeast256BitsLong}")
-    private String secret;
+    /**
+     * Генерирует access token для пользователя.
+     *
+     * @param userDetails детали пользователя
+     * @return access token
+     */
+    String generateAccessToken(UserDetails userDetails);
 
-    @Value("${jwt.access-token-expiration:3600}")
-    private Long accessTokenExpiration;
+    /**
+     * Генерирует refresh token для пользователя.
+     *
+     * @param userDetails детали пользователя
+     * @return refresh token
+     */
+    String generateRefreshToken(UserDetails userDetails);
 
-    @Value("${jwt.refresh-token-expiration:86400}")
-    private Long refreshTokenExpiration;
+    /**
+     * Извлекает username из токена.
+     *
+     * @param token JWT токен
+     * @return username
+     */
+    String getUsernameFromToken(String token);
 
-    private SecretKey getSigningKey() {
-        return Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
-    }
+    /**
+     * Проверяет валидность токена.
+     *
+     * @param token JWT токен
+     * @return true если токен валиден
+     */
+    boolean isTokenValid(String token);
 
-    public String generateAccessToken(UserDetails userDetails) {
-        List<String> authorities =
-                userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList();
-
-        return Jwts.builder()
-                .subject(userDetails.getUsername())
-                .claim("authorities", authorities)
-                .issuedAt(Date.from(Instant.now()))
-                .expiration(Date.from(Instant.now().plusSeconds(accessTokenExpiration)))
-                .signWith(getSigningKey())
-                .compact();
-    }
-
-    public String generateRefreshToken(UserDetails userDetails) {
-        return Jwts.builder()
-                .subject(userDetails.getUsername())
-                .issuedAt(Date.from(Instant.now()))
-                .expiration(Date.from(Instant.now().plusSeconds(refreshTokenExpiration)))
-                .signWith(getSigningKey())
-                .compact();
-    }
-
-    public Claims parseToken(String token) {
-        return Jwts.parser()
-                .verifyWith(getSigningKey())
-                .build()
-                .parseSignedClaims(token)
-                .getPayload();
-    }
-
-    public String getUsernameFromToken(String token) {
-        return parseToken(token).getSubject();
-    }
-
-    public boolean isTokenValid(String token) {
-        try {
-            Claims claims = parseToken(token);
-            return claims.getExpiration().after(Date.from(Instant.now()));
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
-    public Long getRefreshTokenExpiration() {
-        return refreshTokenExpiration;
-    }
+    /**
+     * Возвращает время жизни refresh token в секундах.
+     *
+     * @return время жизни в секундах
+     */
+    Long getRefreshTokenExpiration();
 }
