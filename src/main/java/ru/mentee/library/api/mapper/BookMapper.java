@@ -1,82 +1,29 @@
 /* @MENTEE_POWER (C)2026 */
 package ru.mentee.library.api.mapper;
 
-import java.util.stream.Collectors;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import ru.mentee.library.api.dto.BookDto;
-import ru.mentee.library.domain.model.Author;
 import ru.mentee.library.domain.model.Book;
-import ru.mentee.library.domain.model.Category;
 
 /**
- * Маппер для преобразования Book сущностей в BookDto.
+ * MapStruct маппер для преобразования Book сущностей в BookDto.
  */
-public class BookMapper {
+@Mapper(componentModel = "spring")
+public interface BookMapper {
 
-    /**
-     * Преобразует Book сущность в BookDto.
-     *
-     * @param book сущность книги
-     * @return DTO книги
-     */
-    public static BookDto toDto(Book book) {
-        if (book == null) {
-            return null;
-        }
+    @Mapping(target = "category", source = "category")
+    @Mapping(target = "authors", source = "authors")
+    BookDto toDto(Book book);
 
-        return BookDto.builder()
-                .id(book.getId())
-                .isbn(book.getIsbn())
-                .title(book.getTitle())
-                .description(book.getDescription())
-                .publicationYear(book.getPublicationYear())
-                .pages(book.getPages())
-                .status(book.getStatus())
-                .createdAt(book.getCreatedAt())
-                .updatedAt(book.getUpdatedAt())
-                .category(toCategoryDto(book.getCategory()))
-                .authors(
-                        book.getAuthors() != null
-                                ? book.getAuthors().stream()
-                                        .map(BookMapper::toAuthorDto)
-                                        .collect(Collectors.toSet())
-                                : null)
-                .build();
-    }
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "updatedAt", ignore = true)
+    @Mapping(target = "category", ignore = true)
+    @Mapping(target = "authors", ignore = true)
+    Book toEntity(BookDto bookDto);
 
-    /**
-     * Преобразует Category сущность в CategoryDto.
-     *
-     * @param category сущность категории
-     * @return DTO категории
-     */
-    private static BookDto.CategoryDto toCategoryDto(Category category) {
-        if (category == null) {
-            return null;
-        }
+    BookDto.CategoryDto toCategoryDto(ru.mentee.library.domain.model.Category category);
 
-        return BookDto.CategoryDto.builder()
-                .id(category.getId())
-                .name(category.getName())
-                .description(category.getDescription())
-                .build();
-    }
-
-    /**
-     * Преобразует Author сущность в AuthorDto.
-     *
-     * @param author сущность автора
-     * @return DTO автора
-     */
-    private static BookDto.AuthorDto toAuthorDto(Author author) {
-        if (author == null) {
-            return null;
-        }
-
-        return BookDto.AuthorDto.builder()
-                .id(author.getId())
-                .firstName(author.getFirstName())
-                .lastName(author.getLastName())
-                .biography(author.getBiography())
-                .build();
-    }
+    BookDto.AuthorDto toAuthorDto(ru.mentee.library.domain.model.Author author);
 }
