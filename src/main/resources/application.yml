@@ -1,0 +1,32 @@
+spring:
+  cloud:
+    openfeign:
+      circuitbreaker:
+        enabled: true
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      product-service:
+        registerHealthIndicator: true
+        slidingWindowType: COUNT_BASED
+        slidingWindowSize: 10
+        failureRateThreshold: 50
+        waitDurationInOpenState: 10s
+        permittedNumberOfCallsInHalfOpenState: 3
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+  retry:
+    instances:
+      product-service:
+        maxAttempts: 3
+        waitDuration: 200ms
+        retryExceptions:
+          - java.util.concurrent.TimeoutException
+          - java.io.IOException
+
+feign:
+  client:
+    config:
+      product-service:
+        url: http://localhost:8080
+
